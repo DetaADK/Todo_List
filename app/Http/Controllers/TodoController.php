@@ -7,9 +7,16 @@ use App\Models\Todo;
 
 class TodoController extends Controller
 {
-    public function index()
+    public function index( Request $request)
     {
-        $todos = Todo::all();
+        $query = Todo::query();
+
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where('nama','like','%'.$request->search.'%');
+        }
+
+        $todos = $query->get();
+
         return view('index', compact('todos'));
     }
 

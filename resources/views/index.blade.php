@@ -46,6 +46,13 @@
                 </form>
             </div>
         </div>
+        <form action="{{ route('index') }}" method="GET" class="mb-3">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Cari Todo..."
+                    value="{{ request('search') }}">
+                <button type="submit" class="btn btn-primary">Cari</button>
+            </div>
+        </form>
 
         {{-- <div class="d-flex justify-content-center mt-4">
             <div class="card w-50 mx-auto p-3">
