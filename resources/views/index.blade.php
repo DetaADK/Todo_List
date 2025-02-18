@@ -133,10 +133,10 @@
                     </td>
                     <td>
                         <a href="{{ route('edit', $t->id) }}" class="btn btn-warning btn-sm fs-4"><i class="bi bi-pen-fill"></i></a>
-                        <form action="{{ route('destroy', $t->id) }}" method="POST" class="d-inline">
+                        <form action="{{ route('destroy', $t->id) }}" method="POST" class="d-inline delete-form">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm fs-4">
+                            <button type="submit" class="btn btn-danger btn-sm fs-4 delete-btn">
                                 <i class="bi bi-trash-fill"></i>
                             </button>
                         </form>
@@ -148,23 +148,47 @@
     </div>
     
 
-    @if (session('success'))
-        <div id="autoCloseAlert" class="alert alert-primary position-fixed top-0 start-0 w-100 text-center shadow-lg fade show" role="alert" style="z-index: 1050;">
-            {{ session('success') }}
-        </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            @if(session('success'))
+            Swal.fire({
+                title: 'Berhasil!',
+                text: '{{ session("success") }}',
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 2000,
+                toast: true,
+                position: 'top-end'
+            });
+            @endif
 
-        <script>
-            setTimeout(() => {
-                let alert = document.getElementById("autoCloseAlert");
-                if (alert) {
-                    let bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close(); // Bootstrap 5 fungsi untuk menutup alert
-                }
-            }, 3000); // Notifikasi akan hilang setelah 3 detik
-        </script>
-    @endif
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault(); 
+
+                    let form = this.closest("form"); 
+
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: "Data yang dihapus tidak bisa dikembalikan!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit(); 
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>
